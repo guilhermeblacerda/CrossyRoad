@@ -44,7 +44,3 @@ int main() {
     }
 
     //finaliza o jogo
-    CloseWindow();
-
-    return 0;
-}
