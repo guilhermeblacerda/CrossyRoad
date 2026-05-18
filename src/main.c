@@ -10,9 +10,9 @@ int main() {
     InitWindow(screenWidth, screenHeight, "Crossy Road");
 
     //define as dimensões do player, no centro da tela
-    int playerX = 400;
-    int playerY = 300;
     int playerSize = 40;
+    int playerX = screenWidth/2 - playerSize/2;
+    int playerY = screenHeight/2 - playerSize/2;
 
     //60 fps por segundo
     SetTargetFPS(60);
@@ -44,3 +44,6 @@ int main() {
     }
 
     //finaliza o jogo
+    CloseWindow();
+    return 0;
+}
