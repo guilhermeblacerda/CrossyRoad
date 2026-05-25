@@ -3,6 +3,7 @@
 #include "car.h"
 #include <stdlib.h>
 
+//inicializa o jogo
 void InitGame(Game *game) {
 
     InitPlayer(&game->player);
@@ -16,15 +17,15 @@ void InitGame(Game *game) {
 }
 
 void UpdateGame(Game *game) {
-
+    //evita atualizar o jogo finalizado
     if (!game->gameOver) {
-
+        //movimenta o jogador
         UpdatePlayer(&game->player);
-
+        //movimenta os carros
         updateCars(&game->carList);
-
+        //verifica colisões
         checkCollisions(game);
-
+        //cria novo carro
         if (GetRandomValue(0, 100) < 2) {
             Car *newCar = createCar(
                 0,
@@ -34,22 +35,22 @@ void UpdateGame(Game *game) {
 
             addCar(&game->carList, newCar);
         }
-
+        //atualiza o score
         game->score = (600 - game->player.y) / 40;
     }
 }
-
+//checa colisões
 void checkCollisions(Game *game) {
 
     Car *current = game->carList;
-
+    //desenha retangulo
     Rectangle playerRect = {
         game->player.x,
         game->player.y,
         game->player.tamanho,
         game->player.tamanho
     };
-
+    //percorre os carros
     while (current != NULL) {
 
         Rectangle carRect = {
@@ -58,7 +59,7 @@ void checkCollisions(Game *game) {
             40,
             40
         };
-
+        //se houver colisão, finaliza o jogo e o trava o score
         if (CheckCollisionRecs(playerRect, carRect)) {
 
             game->gameOver = 1;
@@ -69,7 +70,7 @@ void checkCollisions(Game *game) {
         current = current->next;
     }
 }
-
+//parte visual
 void DrawGame(Game *game) {
 
     drawMap(game->map);
@@ -85,7 +86,7 @@ void DrawGame(Game *game) {
         DrawText("Pressione R para reiniciar", 200, 300, 20, WHITE);
     }
 }
-
+//libera a memória
 void FreeGame(Game *game) {
 
     Car *current = game->carList;
