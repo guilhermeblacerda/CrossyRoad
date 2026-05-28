@@ -1,5 +1,4 @@
 # CrossyRoad
-# Crossy Road Clone
 
 Um clone simples inspirado no jogo Crossy Road, desenvolvido em C utilizando Raylib.
 
@@ -41,7 +40,6 @@ crossy-road-clone
 │
 ├── assets
 ├── src
-├── build
 ├── README.md
 ├── .gitignore
 └── Makefile
