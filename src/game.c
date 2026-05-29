@@ -8,12 +8,12 @@
 #include <stdlib.h>
 
 int lanes[] = {
-    80,
     120,
     200,
-    240,
-    320,
-    360
+    280,
+    360,
+    440,
+    480
 };
 
 float laneSpeeds[] = {

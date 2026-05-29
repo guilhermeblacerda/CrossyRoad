@@ -3,8 +3,8 @@
 
 #include "raylib.h"
 
-#define ROWS 10
-#define COLS 10
+#define ROWS 15
+#define COLS 20
 #define TILE_SIZE 40
 
 typedef struct Map{

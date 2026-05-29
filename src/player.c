@@ -10,7 +10,7 @@ void InitPlayer(Player *player) {
     player->won = 0;
 
     player->x = (GetScreenWidth() / 2) - (player->tamanho / 2);
-    player->y = (GetScreenHeight() / 2) - (player->tamanho / 2);
+    player->y = GetScreenHeight() - (TAM_BLOCO * 4);
 
     player->texture = LoadTexture("assets/player.png");
 
@@ -18,36 +18,38 @@ void InitPlayer(Player *player) {
         printf("Erro ao carregar textura\n");
     }
 }
-
 void UpdatePlayer(Player *player) {
 
-    if (IsKeyPressed(KEY_W) || IsKeyPressed(KEY_UP)) {
-        if (player->y - TAM_BLOCO < 0) {
-            player->won = 1;
-        } else {
-            player->y -= TAM_BLOCO;
+    if (!player->won) {
+
+        if (IsKeyPressed(KEY_W) || IsKeyPressed(KEY_UP)) {
+            if (player->y - TAM_BLOCO <= -80) {
+                player->y -= TAM_BLOCO;
+                player->won = 1;
+            } else {
+                player->y -= TAM_BLOCO;
+            }
         }
+
+        if (IsKeyPressed(KEY_S) || IsKeyPressed(KEY_DOWN))
+            player->y += TAM_BLOCO;
+
+        if (IsKeyPressed(KEY_A) || IsKeyPressed(KEY_LEFT))
+            player->x -= TAM_BLOCO;
+
+        if (IsKeyPressed(KEY_D) || IsKeyPressed(KEY_RIGHT))
+            player->x += TAM_BLOCO;
+
+        if (player->x < 0)
+            player->x = 0;
+
+        if (player->y > GetScreenHeight() - player->tamanho)
+            player->y = GetScreenHeight() - player->tamanho;
+
+        if (player->x > GetScreenWidth() - player->tamanho)
+            player->x = GetScreenWidth() - player->tamanho;
     }
-
-    if (IsKeyPressed(KEY_S) || IsKeyPressed(KEY_DOWN))
-        player->y += TAM_BLOCO;
-
-    if (IsKeyPressed(KEY_A) || IsKeyPressed(KEY_LEFT))
-        player->x -= TAM_BLOCO;
-
-    if (IsKeyPressed(KEY_D) || IsKeyPressed(KEY_RIGHT))
-        player->x += TAM_BLOCO;
-
-    if (player->x < 0)
-        player->x = 0;
-
-    if (player->y > GetScreenHeight() - player->tamanho)
-        player->y = GetScreenHeight() - player->tamanho;
-
-    if (player->x > GetScreenWidth() - player->tamanho)
-        player->x = GetScreenWidth() - player->tamanho;
 }
-
 void DrawPlayer(Player *player) {
 
     DrawTexture(
