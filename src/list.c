@@ -1,10 +1,14 @@
 #include "list.h"
+#include <stdlib.h>
 
+//adiciona novo carro
 void addCar(Car **head, Car *newCar) {
 
     newCar->next = *head;
     *head = newCar;
 }   
+
+
 void drawCars(Car *head) {
 
     Car *current = head;

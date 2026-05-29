@@ -2,6 +2,8 @@
 #include "player.h"
 #include "car.h"
 #include "list.h"
+#include "score.h"
+#include "raylib.h"
 #include <stdlib.h>
 
 int lanes[] = {
@@ -119,11 +121,42 @@ void DrawGame(Game *game) {
 
     DrawPlayer(&game->player);
 
-    DrawText(TextFormat("Score: %d", game->score), 10, 10, 20, WHITE);
+    DrawText(
+        TextFormat("Score: %d", game->score),
+        10,
+        10,
+        20,
+        WHITE
+    );
 
     if (game->gameOver) {
+
         DrawText("GAME OVER", 250, 250, 40, RED);
-        DrawText("Pressione R para reiniciar", 200, 300, 20, WHITE);
+
+        DrawText(
+            "Pressione R para reiniciar",
+            200,
+            300,
+            20,
+            WHITE
+        );
+
+        int scores[5];
+
+        int totalScores = loadScores(scores, 5);
+
+        DrawText("TOP SCORES:", 250, 350, 25, YELLOW);
+
+        for (int i = 0; i < totalScores; i++) {
+
+            DrawText(
+                TextFormat("%d", scores[i]),
+                320,
+                390 + (i * 30),
+                20,
+                WHITE
+            );
+        }
     }
 }
 //libera a memória

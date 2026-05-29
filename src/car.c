@@ -1,5 +1,6 @@
 #include "car.h"
 #include <stdlib.h>
+#include "raylib.h"
 
 Car* createCar(int x, int y, float speed) {
 
