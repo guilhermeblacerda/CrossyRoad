@@ -1,7 +1,25 @@
 #include "game.h"
 #include "player.h"
 #include "car.h"
+#include "list.h"
 #include <stdlib.h>
+
+int lanes[] = {
+    80,
+    160,
+    240,
+    320,
+    400,
+    480
+};
+float laneSpeeds[] = {
+    2.0f,
+    4.0f,
+    3.0f,
+    5.0f,
+    2.5f,
+    4.5f
+};
 
 //inicializa o jogo
 void InitGame(Game *game) {
@@ -22,15 +40,37 @@ void UpdateGame(Game *game) {
         //movimenta o jogador
         UpdatePlayer(&game->player);
         //movimenta os carros
-        updateCars(&game->carList);
+        updateCars(game->carList);
+        //remove carros fora da tela
+        removeOffscreenCars(&game->carList);
         //verifica colisões
         checkCollisions(game);
-        //cria novo carro
+         //cria novo carro
         if (GetRandomValue(0, 100) < 2) {
+
+            int laneIndex = GetRandomValue(0, 5);
+
+            float speed;
+            int startX;
+
+            //faixa par vai pra direita
+            if (laneIndex % 2 == 0) {
+
+                speed = 3.0f;
+                startX = 0;
+            }
+
+            //faixa impar pra esquerda
+            else {
+
+                speed = -3.0f;
+                startX = 800;
+            }
+
             Car *newCar = createCar(
-                0,
-                (GetRandomValue(0, 9) * 40),
-                3.0f
+                startX,
+                lanes[laneIndex],
+                speed
             );
 
             addCar(&game->carList, newCar);
