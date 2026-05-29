@@ -8,7 +8,7 @@ typedef struct {
     int x;
     int y;
     int tamanho;
-
+    int won;
     Texture2D texture;
 
 } Player;

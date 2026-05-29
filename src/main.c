@@ -14,7 +14,12 @@ int main() {
     while (!WindowShouldClose()) {
 
         UpdateGame(&game);
+
+        BeginDrawing();
+        ClearBackground(RAYWHITE);
+
         DrawGame(&game);
+        EndDrawing();
     }
 
     FreeGame(&game);

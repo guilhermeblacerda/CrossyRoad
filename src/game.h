@@ -3,16 +3,17 @@
 
 #include "player.h"
 #include "car.h"
+#include "map.h"
 
-#define ROWS 100
-#define COLS 20
 
-typedef struct {
+typedef struct Game{
+    Map map;
     Player player;
     Car *carList;
-    int map[ROWS][COLS];
+    int mapa[ROWS][COLS];
     int score;
     int gameOver;
+    int gameWon;
 } Game;
 
 void InitGame(Game *game);
@@ -20,5 +21,6 @@ void UpdateGame(Game *game);
 void DrawGame(Game *game);
 void ResetGame(Game *game);
 void FreeGame(Game *game);
+void checkCollisions(Game *game);
 
 #endif
