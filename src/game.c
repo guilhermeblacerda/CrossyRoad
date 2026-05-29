@@ -56,14 +56,14 @@ void UpdateGame(Game *game) {
             //faixa par vai pra direita
             if (laneIndex % 2 == 0) {
 
-                speed = 3.0f;
+                speed = laneSpeeds[laneIndex];
                 startX = 0;
             }
 
             //faixa impar pra esquerda
             else {
 
-                speed = -3.0f;
+                speed = laneSpeeds[laneIndex];
                 startX = 800;
             }
 

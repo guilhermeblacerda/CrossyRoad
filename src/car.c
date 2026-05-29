@@ -23,8 +23,18 @@ void updateCar(Car *car) {
 
     car->x += car->speed;
 
-    if (car->x > GetScreenWidth()) {
+    //carro indo pra direita (+)
+    if (car->speed > 0 &&
+        car->x > GetScreenWidth()) {
+
         car->x = -car->width;
+    }
+
+    //carro indo pra esquerda (-)
+    if (car->speed < 0 &&
+        car->x < -car->width) {
+
+        car->x = GetScreenWidth();
     }
 }
 

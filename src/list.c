@@ -42,3 +42,15 @@ void freeCars(Car **head) {
 
     *head = NULL;
 }
+void removeOffscreenCars(Car **head) {
+
+    while (*head != NULL &&
+           (*head)->x > GetScreenWidth()) {
+
+        Car *temp = *head;
+
+        *head = (*head)->next;
+
+        free(temp);
+    }
+}
