@@ -46,7 +46,7 @@ void UpdateGame(Game *game) {
         //verifica colisões
         checkCollisions(game);
          //cria novo carro
-        if (GetRandomValue(0, 100) < 2) {
+        if (GetRandomValue(0, 100) < 4) {
 
             int laneIndex = GetRandomValue(0, 5);
 
@@ -63,7 +63,7 @@ void UpdateGame(Game *game) {
             //faixa impar pra esquerda
             else {
 
-                speed = laneSpeeds[laneIndex];
+                speed = -laneSpeeds[laneIndex];
                 startX = 800;
             }
 
