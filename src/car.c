@@ -1,11 +1,8 @@
 #include "car.h"
 #include "raylib.h"
 #include <stdlib.h>
-#include <stdio.h>
 
 Car* createCar(float x, float y, float speed) {
-
-    printf("createCar: x=%.0f y=%.0f\n", x, y);
 
 
     Car *newCar = (Car*)malloc(sizeof(Car));
@@ -19,7 +16,7 @@ Car* createCar(float x, float y, float speed) {
     newCar->height = 40;
     newCar->speed = speed;
     newCar->next = NULL;
-
+    newCar->texture = LoadTexture("assets/car.png");
     return newCar;
 }
 
@@ -37,9 +34,12 @@ void drawCar(Car *car) {
     if (car == NULL){
         return;
     }
-    DrawRectangle((int)car->x, (int)car->y, car->width, car->height, RED);
+    Rectangle src = {0, 0, car->texture.width, car->texture.height};
+    Rectangle dest = {car->x, car->y, car->width, car->height};
+    DrawTexturePro(car->texture, src, dest, (Vector2){0, 0}, 0, WHITE);
 }
 
 void destroyCar(Car *car) {
+    UnloadTexture(car->texture);
     free(car);
 }

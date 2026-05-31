@@ -9,6 +9,7 @@ typedef struct Car {
     int width;
     int height;
     float speed;
+    Texture2D texture;
     struct Car *next;
 } Car;
 
