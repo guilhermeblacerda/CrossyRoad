@@ -17,12 +17,12 @@ int lanes[] = {
 };
 
 float laneSpeeds[] = {
-    2.0f,
     4.0f,
-    3.0f,
+    6.0f,
     5.0f,
-    2.5f,
-    4.5f
+    7.0f,
+    4.5f,
+    6.5f
 };
 
 void InitGame(Game *game) {
@@ -40,20 +40,6 @@ void InitGame(Game *game) {
 }
 
 void UpdateGame(Game *game) {
-<<<<<<< HEAD
-    //evita atualizar o jogo finalizado
-    if (!game->gameOver) {
-        //movimenta o jogador
-        UpdatePlayer(&game->player);
-        //movimenta os carros
-        updateCars(game->carList);
-        //remove carros fora da tela
-        removeOffscreenCars(&game->carList);
-        //verifica colisões
-        checkCollisions(game);
-         //cria novo carro
-        if (GetRandomValue(0, 100) < 4) {
-=======
 
     if (game->gameOver) {
         if (IsKeyPressed(KEY_R)) {
@@ -63,27 +49,30 @@ void UpdateGame(Game *game) {
     }
 
     UpdatePlayer(&game->player);
-
+        
     if (game->player.won) {
-        saveScore(game->score); 
+        saveScore(game->score);
         game->gameWon = 1;
         game->gameOver = 1;
         return;
     }
 
-    updateCars(game->carList);
-    removeOffscreenCars(&game->carList);
-
     checkCollisions(game);
+    if (game->gameOver) return;
+
+    updateCars(game->carList);
+    checkCollisions(game);
+    if (game->gameOver) return;
+
+    removeOffscreenCars(&game->carList);
 
     static int spawnTimer = 0;
     spawnTimer++;
 
-    if (spawnTimer > 30) {
+    if (spawnTimer > 15) {
         spawnTimer = 0;
 
-        if (GetRandomValue(0, 100) < 20) {
->>>>>>> 9e5ef5a131bc8cf1d5ebf28529e5425a9eca7cc3
+        if (GetRandomValue(0, 100) < 40) {
 
             int laneIndex = GetRandomValue(0, 5);
 
@@ -92,27 +81,13 @@ void UpdateGame(Game *game) {
 
             if (laneIndex % 2 == 0) {
                 startX = 0;
-<<<<<<< HEAD
-            }
-
-            //faixa impar pra esquerda
-            else {
-
-                speed = -laneSpeeds[laneIndex];
-=======
                 speed = laneSpeeds[laneIndex];
             } else {
->>>>>>> 9e5ef5a131bc8cf1d5ebf28529e5425a9eca7cc3
                 startX = 800;
                 speed = -laneSpeeds[laneIndex];
             }
 
-            Car *newCar = createCar(
-                startX,
-                lanes[laneIndex],
-                speed
-            );
-
+            Car *newCar = createCar((float)startX, (float)lanes[laneIndex], speed);
             addCar(&game->carList, newCar);
         }
     }
@@ -126,6 +101,7 @@ void UpdateGame(Game *game) {
 
 void DrawGame(Game *game) {
 
+    
     drawMap(&game->map);
 
     drawCars(game->carList);
@@ -185,25 +161,23 @@ void FreeGame(Game *game) {
 
 void checkCollisions(Game *game) {
 
-    Rectangle playerRect = {
-        game->player.x + 5,
-        game->player.y + 5,
-        game->player.tamanho - 10,
-        game->player.tamanho - 10
-    };
+    int px = game->player.x;
+    int py = game->player.y;
+    int ps = game->player.tamanho;
 
     Car *current = game->carList;
 
     while (current != NULL) {
 
-        Rectangle carRect = {
-            current->x,
-            current->y,
-            current->width,
-            current->height
-        };
+        int cx = (int)current->x;
+        int cy = (int)current->y;
+        int cw = current->width;
+        int ch = current->height;
 
-        if (CheckCollisionRecs(playerRect, carRect)) {
+        int noOverlapX = (px + ps <= cx) || (cx + cw <= px);
+        int noOverlapY = (py + ps <= cy) || (cy + ch <= py);
+
+        if (!noOverlapX && !noOverlapY) {
             saveScore(game->score);
             game->gameOver = 1;
             return;

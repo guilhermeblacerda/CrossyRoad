@@ -10,7 +10,6 @@ typedef struct Game{
     Map map;
     Player player;
     Car *carList;
-    int mapa[ROWS][COLS];
     int score;
     int gameOver;
     int gameWon;

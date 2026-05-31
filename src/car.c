@@ -1,8 +1,12 @@
 #include "car.h"
 #include "raylib.h"
 #include <stdlib.h>
+#include <stdio.h>
 
-Car* createCar(int x, int y, float speed) {
+Car* createCar(float x, float y, float speed) {
+
+    printf("createCar: x=%.0f y=%.0f\n", x, y);
+
 
     Car *newCar = (Car*)malloc(sizeof(Car));
     if (newCar == NULL){
@@ -21,16 +25,19 @@ Car* createCar(int x, int y, float speed) {
 
 void updateCar(Car *car) {
 
-    if (car == NULL) return;
+    if (car == NULL){
+        return;
+    }
 
-    car->x += (int)car->speed;
+    car->x += car->speed;
 }
 
 void drawCar(Car *car) {
 
-    if (car == NULL) return;
-
-    DrawRectangle(car->x, car->y, car->width, car->height, RED);
+    if (car == NULL){
+        return;
+    }
+    DrawRectangle((int)car->x, (int)car->y, car->width, car->height, RED);
 }
 
 void destroyCar(Car *car) {

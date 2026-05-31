@@ -4,15 +4,15 @@
 #include "raylib.h"
 
 typedef struct Car {
-    int x;
-    int y;
+    float x;
+    float y;
     int width;
     int height;
     float speed;
     struct Car *next;
 } Car;
 
-Car* createCar(int x, int y, float speed);
+Car* createCar(float x, float y, float speed);
 void updateCar(Car *car);
 void drawCar(Car *car);
 void destroyCar(Car *car);
