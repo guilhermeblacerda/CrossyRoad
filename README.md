@@ -31,20 +31,12 @@ Este projeto foi criado para praticar:
 - [ ] Sprites
 - [ ] Game Over
 
-## Estrutura do Projeto
 
-```txt
-crossy-road
-│
-├── assets
-├── src
-├── README.md
-├── .gitignore
-└── Makefile
 
 ## **Como compilar:**
 
   ### Linux:
+
 
   1. Clone o repositorio do projeto:
 
