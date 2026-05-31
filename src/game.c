@@ -2,16 +2,20 @@
 #include "player.h"
 #include "car.h"
 #include "list.h"
+#include "score.h"
+#include "map.h"
+#include "raylib.h"
 #include <stdlib.h>
 
 int lanes[] = {
-    80,
-    160,
-    240,
-    320,
-    400,
+    120,
+    200,
+    280,
+    360,
+    440,
     480
 };
+
 float laneSpeeds[] = {
     2.0f,
     4.0f,
@@ -21,20 +25,22 @@ float laneSpeeds[] = {
     4.5f
 };
 
-//inicializa o jogo
 void InitGame(Game *game) {
 
     InitPlayer(&game->player);
+    game->player.won = 0;
 
     game->carList = NULL;
 
-    initMap(game->map);
+    initMap(&game->map);
 
     game->score = 0;
     game->gameOver = 0;
+    game->gameWon = 0;
 }
 
 void UpdateGame(Game *game) {
+<<<<<<< HEAD
     //evita atualizar o jogo finalizado
     if (!game->gameOver) {
         //movimenta o jogador
@@ -47,24 +53,58 @@ void UpdateGame(Game *game) {
         checkCollisions(game);
          //cria novo carro
         if (GetRandomValue(0, 100) < 4) {
+=======
+
+    if (game->gameOver) {
+        if (IsKeyPressed(KEY_R)) {
+            InitGame(game);
+        }
+        return;
+    }
+
+    UpdatePlayer(&game->player);
+
+    if (game->player.won) {
+        saveScore(game->score); 
+        game->gameWon = 1;
+        game->gameOver = 1;
+        return;
+    }
+
+    updateCars(game->carList);
+    removeOffscreenCars(&game->carList);
+
+    checkCollisions(game);
+
+    static int spawnTimer = 0;
+    spawnTimer++;
+
+    if (spawnTimer > 30) {
+        spawnTimer = 0;
+
+        if (GetRandomValue(0, 100) < 20) {
+>>>>>>> 9e5ef5a131bc8cf1d5ebf28529e5425a9eca7cc3
 
             int laneIndex = GetRandomValue(0, 5);
 
             float speed;
             int startX;
 
-            //faixa par vai pra direita
             if (laneIndex % 2 == 0) {
-
-                speed = laneSpeeds[laneIndex];
                 startX = 0;
+<<<<<<< HEAD
             }
 
             //faixa impar pra esquerda
             else {
 
                 speed = -laneSpeeds[laneIndex];
+=======
+                speed = laneSpeeds[laneIndex];
+            } else {
+>>>>>>> 9e5ef5a131bc8cf1d5ebf28529e5425a9eca7cc3
                 startX = 800;
+                speed = -laneSpeeds[laneIndex];
             }
 
             Car *newCar = createCar(
@@ -75,58 +115,61 @@ void UpdateGame(Game *game) {
 
             addCar(&game->carList, newCar);
         }
-        //atualiza o score
+    }
+
+    if (game->player.y < 600) {
         game->score = (600 - game->player.y) / 40;
+    } else {
+        game->score = 0;
     }
 }
-//checa colisões
-void checkCollisions(Game *game) {
 
-    Car *current = game->carList;
-    //desenha retangulo
-    Rectangle playerRect = {
-        game->player.x,
-        game->player.y,
-        game->player.tamanho,
-        game->player.tamanho
-    };
-    //percorre os carros
-    while (current != NULL) {
-
-        Rectangle carRect = {
-            current->x,
-            current->y,
-            40,
-            40
-        };
-        //se houver colisão, finaliza o jogo e o trava o score
-        if (CheckCollisionRecs(playerRect, carRect)) {
-
-            game->gameOver = 1;
-
-            saveScore(game->score);
-        }
-
-        current = current->next;
-    }
-}
-//parte visual
 void DrawGame(Game *game) {
 
-    drawMap(game->map);
+    drawMap(&game->map);
 
     drawCars(game->carList);
 
     DrawPlayer(&game->player);
 
-    DrawText(TextFormat("Score: %d", game->score), 10, 10, 20, WHITE);
+    DrawText(
+        TextFormat("Score: %d", game->score),
+        10,
+        10,
+        20,
+        WHITE
+    );
 
     if (game->gameOver) {
-        DrawText("GAME OVER", 250, 250, 40, RED);
+
+        if (game->gameWon) {
+            DrawText("VOCE VENCEU!", 220, 250, 40, GREEN);
+        } else {
+            DrawText("GAME OVER", 250, 250, 40, RED);
+        }
+
         DrawText("Pressione R para reiniciar", 200, 300, 20, WHITE);
+
+        int scores[5];
+        int totalScores = loadScores(scores, 5);
+
+        if (totalScores < 0) totalScores = 0;
+        if (totalScores > 5) totalScores = 5;
+
+        DrawText("TOP SCORES:", 250, 350, 25, YELLOW);
+
+        for (int i = 0; i < totalScores; i++) {
+            DrawText(
+                TextFormat("%d", scores[i]),
+                320,
+                390 + (i * 30),
+                20,
+                WHITE
+            );
+        }
     }
 }
-//libera a memória
+
 void FreeGame(Game *game) {
 
     Car *current = game->carList;
@@ -138,4 +181,34 @@ void FreeGame(Game *game) {
     }
 
     game->carList = NULL;
+}
+
+void checkCollisions(Game *game) {
+
+    Rectangle playerRect = {
+        game->player.x + 5,
+        game->player.y + 5,
+        game->player.tamanho - 10,
+        game->player.tamanho - 10
+    };
+
+    Car *current = game->carList;
+
+    while (current != NULL) {
+
+        Rectangle carRect = {
+            current->x,
+            current->y,
+            current->width,
+            current->height
+        };
+
+        if (CheckCollisionRecs(playerRect, carRect)) {
+            saveScore(game->score);
+            game->gameOver = 1;
+            return;
+        }
+
+        current = current->next;
+    }
 }

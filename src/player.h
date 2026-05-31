@@ -4,13 +4,18 @@
 #include "raylib.h"
 
 typedef struct {
+
     int x;
     int y;
     int tamanho;
+    int won;
+    Texture2D texture;
+
 } Player;
 
 void InitPlayer(Player *player);
 void UpdatePlayer(Player *player);
 void DrawPlayer(Player *player);
+void FreePlayer(Player *player);
 
 #endif

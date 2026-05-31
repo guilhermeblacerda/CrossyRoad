@@ -1,46 +1,65 @@
 #include "player.h"
 #include "raylib.h"
+#include <stdio.h>
 
 const int TAM_BLOCO = 40;
 
-//função para mudar o player de posição
-void UpdatePlayer(Player *player){
+void InitPlayer(Player *player) {
 
-    //subir
-    if (IsKeyPressed(KEY_W) || IsKeyPressed(KEY_UP)) {
-        player->y -= TAM_BLOCO;
+    player->tamanho = TAM_BLOCO;
+    player->won = 0;
+
+    player->x = (GetScreenWidth() / 2) - (player->tamanho / 2);
+    player->y = GetScreenHeight() - (TAM_BLOCO * 4);
+
+    player->texture = LoadTexture("assets/player.png");
+
+    if (player->texture.id == 0) {
+        printf("Erro ao carregar textura\n");
     }
-    //descer
-    if (IsKeyPressed(KEY_S) || IsKeyPressed(KEY_DOWN)) {
-        player->y += TAM_BLOCO;
+}
+void UpdatePlayer(Player *player) {
+
+    if (!player->won) {
+
+        if (IsKeyPressed(KEY_W) || IsKeyPressed(KEY_UP)) {
+            if (player->y - TAM_BLOCO <= -80) {
+                player->y -= TAM_BLOCO;
+                player->won = 1;
+            } else {
+                player->y -= TAM_BLOCO;
+            }
+        }
+
+        if (IsKeyPressed(KEY_S) || IsKeyPressed(KEY_DOWN))
+            player->y += TAM_BLOCO;
+
+        if (IsKeyPressed(KEY_A) || IsKeyPressed(KEY_LEFT))
+            player->x -= TAM_BLOCO;
+
+        if (IsKeyPressed(KEY_D) || IsKeyPressed(KEY_RIGHT))
+            player->x += TAM_BLOCO;
+
+        if (player->x < 0)
+            player->x = 0;
+
+        if (player->y > GetScreenHeight() - player->tamanho)
+            player->y = GetScreenHeight() - player->tamanho;
+
+        if (player->x > GetScreenWidth() - player->tamanho)
+            player->x = GetScreenWidth() - player->tamanho;
     }
-    //esquerda
-    if (IsKeyPressed(KEY_A) || IsKeyPressed(KEY_LEFT)) {
-        player->x -= TAM_BLOCO;
-    }
-    //direita
-    if (IsKeyPressed(KEY_D) || IsKeyPressed(KEY_RIGHT)) {
-        player->x += TAM_BLOCO;
-    }
+}
+void DrawPlayer(Player *player) {
 
-    //impede de sair da tela
-    if (player->x < 0)
-        player->x = 0;
-
-    if (player->y < 0)
-        player->y = 0;
-
-    if (player->x > GetScreenWidth() - player->tamanho)
-        player->x = GetScreenWidth() - player->tamanho;
-
-    if (player->y > GetScreenHeight() - player->tamanho)
-        player->y = GetScreenHeight() - player->tamanho;
+    DrawTexture(
+        player->texture,
+        player->x,
+        player->y,
+        WHITE
+    );
 }
 
-
-//função para iniciar o player
-void InitPlayer(Player *player) {
-    player->tamanho = TAM_BLOCO;
-    player->x = (GetScreenWidth() / 2) - (player->tamanho / 2);
-    player->y = (GetScreenHeight() / 2) - (player->tamanho / 2);
+void FreePlayer(Player *player) {
+    UnloadTexture(player->texture);
 }
