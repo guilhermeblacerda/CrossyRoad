@@ -71,3 +71,7 @@ Este projeto foi criado para praticar:
   ```bash
   main.exe
   ```
+
+### Gameplay - Game Over e Vitória
+
+https://youtu.be/jHZ8gpcw9b0
